@@ -145,6 +145,7 @@ block js
             };
         });
 
+        var multiplier;
         var keymap = {
             49: '261',
             50: '293',
@@ -154,12 +155,27 @@ block js
             54: '440',
             55: '494',
             56: '523'
+            9: Math.pow(2, 1/12)
         };
 
         document.onkeydown = function(e) {
             var key = e.keyCode ? e.keyCode : e.which;
+            if( key == 9 ) // Tab
+            {
+                multiplier = keymap[key];
+            }
+            if( key == 32 ) // Spacebar
+            {
+                multiplier = 1/keymap[key];
+            }
             if(keymap[key]){
-                sendData('edm', keymap[key]);
+                sendData('edm', multiplier*keymap[key]);
             }
         };
-
+        document.onkeyup = function(e) {
+            var key = e.keyCode ? e.keyCode : e.which;
+            if( ( key == 9 ) || ( key == 32 ) )
+            {
+                multiplier = 1;
+            }
+        }
