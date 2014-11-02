@@ -14,8 +14,7 @@ io.on('connection', function(socket){
     });
 
     socket.on('senddata', function(data){
-        socket.emit('recievedata', socket.username, data); // send back to user
-        socket.broadcast.to(socket.room).emit('recievedata', socket.username, data); // broadcast to all others
+        socket.broadcast.to(socket.room).emit('recievedata', socket.username, data);
     });
 
     socket.on('disconnect', function(){

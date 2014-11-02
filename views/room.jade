@@ -4,7 +4,14 @@ block content
     h1= title
     p id: #{roomId}
 
-    button#send-message play
+    button#play-C3 play C
+    button#play-D3 play D
+    button#play-E3 play E
+    button#play-F3 play F
+    button#play-G3 play G
+    button#play-A4 play A
+    button#play-B4 play B
+    button#play-C4 play B
 
 block js
     script(src="/socket.io/socket.io.js")
@@ -13,7 +20,7 @@ block js
         Th.init();
 
         //based on http://joewlarson.com/thunderjs/demo.html
-        var sounds={
+        var sound = {
                 sineFunc:function(si, len,  frq, chn, opt) {
                     var fad=Math.min(1,(opt.sustain || 1)*(len-si)/len); // used to fade out, to avoid an abrupt chop off of the wave, which causes a click.
                     return Math.floor(fad*128*256*(
@@ -22,7 +29,12 @@ block js
                 }
             };
 
-        Th.Sound.create('testsound', sounds.sineFunc).play();
+        sound.playInstrument = function(pitch){
+            //if(Th.Inst.get('default') == null)
+            //Th.Inst.create('default', sound.sineFunc);
+            Th.Inst.create('default', sound.sineFunc).getSound(pitch).play();
+        };
+
 
     script.
         var roomId = '#{roomId}'
@@ -38,15 +50,21 @@ block js
         }
 
         socket.on('recievedata', function(user, data){
-            Th.Sound.create('testsound', sounds.sineFunc).play();
+            sound.playInstrument('C');
         });
 
     script.
         var messages = document.getElementById('messages');
         var message = document.getElementById('message-input');
-        var sendMessage = document.getElementById('send-message');
+        var playButtons = document.getElementsByTagName('button');
+        playButtons = Array.prototype.slice.call(playButtons);
 
-        sendMessage.onclick = function(){
-            sendData('play');
-        };
+        playButtons.map(function(button, idx){
+            playButtons[idx].onclick = function(){
+                var id = button.id;
+                var note = id.split('-')[1];
+                sound.playInstrument(note);
+                sendData('play');
+            };
+        });
 
