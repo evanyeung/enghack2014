@@ -13,8 +13,8 @@ io.on('connection', function(socket){
         socket.join(roomId);
     });
 
-    socket.on('senddata', function(data){
-        socket.broadcast.to(socket.room).emit('recievedata', socket.username, data);
+    socket.on('senddata', function(instrument, data){
+        socket.broadcast.to(socket.room).emit('recievedata', instrument, data);
     });
 
     socket.on('disconnect', function(){

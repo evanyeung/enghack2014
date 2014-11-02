@@ -9,38 +9,19 @@ block content
             input#username(placeholder="Username")
             button#join(type="submit") Join
         div.play#play
-            button#play-C3.play-note play C
-            button#play-D3.play-note play D
-            button#play-E3.play-note play E
-            button#play-F3.play-note play F
-            button#play-G3.play-note play G
-            button#play-A4.play-note play A
-            button#play-B4.play-note play B
-            button#play-C4.play-note play C
+            button#play-261.play-note play C
+            button#play-293.play-note play D
+            button#play-330.play-note play E
+            button#play-350.play-note play F
+            button#play-392.play-note play G
+            button#play-440.play-note play A
+            button#play-493.play-note play B
+            button#play-523.play-note play C
 
 block js
     script(src="/socket.io/socket.io.js")
-    script(src="/bower_components/Thunder/thunder.js")
-    script.
-        Th.init();
-
-        //based on http://joewlarson.com/thunderjs/demo.html
-        var sound = {
-                sineFunc:function(si, len,  frq, chn, opt) {
-                    var fad=Math.min(1,(opt.sustain || 1)*(len-si)/len); // used to fade out, to avoid an abrupt chop off of the wave, which causes a click.
-                    return Math.floor(fad*128*256*(
-                        Math.sin(2.0 * Math.PI * frq * si  / 44100)
-                    ));
-                }
-            };
-
-        sound.playInstrument = function(pitch){
-            //if(Th.Inst.get('default') == null)
-            //Th.Inst.create('default', sound.sineFunc);
-            Th.Inst.create('default', sound.sineFunc).getSound(pitch).play();
-        };
-
-
+    script(src="/bower_components/timbre/index.js")
+    script(src="/javascripts/instruments.js")
     script.
         var roomId = '#{roomId}'
         var socket = io();
@@ -60,12 +41,12 @@ block js
             return false;
         };
 
-        function sendData(data){
-            socket.emit('senddata', data);
+        function sendData(instrument, data){
+            socket.emit('sendata', instrument, data);
         }
 
-        socket.on('recievedata', function(user, data){
-            sound.playInstrument(data);
+        socket.on('recievedata', function(instrument, pitch){
+            instruments[instrument](pitch);
         });
 
     script.
@@ -75,30 +56,33 @@ block js
         playButtons = Array.prototype.slice.call(playButtons);
 
         playButtons.map(function(button, idx){
-            playButtons[idx].onclick = function(){
+            playButtons[idx].onmousedown = function(){
                 var id = button.id;
                 var note = id.split('-')[1];
-                sound.playInstrument(note);
-                sendData(note);
+                var synth = instruments.clarinet(parseInt(note));
+                sendData('clarinet', note);
+                playButtons[idx].onmouseup = function(){
+                    synth.noteOffWithFreq(note);
+                }
             };
         });
 
         var keymap = {
-            49: 'C3',
-            50: 'D3',
-            51: 'E3',
-            52: 'F3',
-            53: 'G3',
-            54: 'A4',
-            55: 'B4',
-            56: 'C4'
+            49: '261',
+            50: '293',
+            51: '330',
+            52: '350',
+            53: '392',
+            54: '440',
+            55: '494',
+            56: '523'
         };
 
         document.onkeydown = function(e) {
             var key = e.keyCode ? e.keyCode : e.which;
             if(keymap[key]){
-                sound.playInstrument(keymap[key]);
-                sendData(keymap[key]);
+                instruments.edm(keymap[key]);
+                sendData('edm', keymap[key]);
             }
         };
 
