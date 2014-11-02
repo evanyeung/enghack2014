@@ -2,7 +2,8 @@ extends layout
 
 block content
     div.room
-        h1.title= title
+        h1.title
+            a(href="/")= title
 
         form.sign-in#sign-in
             p Enter a username
@@ -17,6 +18,8 @@ block content
             button#play-440.play-note play A
             button#play-493.play-note play B
             button#play-523.play-note play C
+        div
+            ul#user-list
 
 block js
     script(src="/socket.io/socket.io.js")
@@ -31,8 +34,6 @@ block js
             var username = document.getElementById('username').value;
             if(roomId && username){
                 socket.emit('joinroom', username, roomId);
-                document.getElementById('sign-in').style.display = 'none';
-                document.getElementById('play').style.display = 'block';
             }
             else{
                 alert('Please enter a username');
@@ -41,12 +42,34 @@ block js
             return false;
         };
 
+        socket.on('joinedroom', function(result){
+            if(result){
+                document.getElementById('sign-in').style.display = 'none';
+                document.getElementById('play').style.display = 'block';
+            }
+            else{
+                alert('Sorry, that username is taken');
+            }
+        });
+
         function sendData(instrument, data){
             socket.emit('sendata', instrument, data);
         }
 
         socket.on('recievedata', function(instrument, pitch){
             instruments[instrument](pitch);
+        });
+
+        socket.on('userchange', function(users){
+            var userList = document.getElementById('user-list');
+            while(userList.firstChild){
+                userList.removeChild(userList.firstChild);
+            }
+            for(var i=0; i<users.length; i++){
+                var li = document.createElement("li");
+                li.appendChild(document.createTextNode(users[i]));
+                userList.appendChild(li);
+            }
         });
 
     script.
@@ -57,10 +80,11 @@ block js
 
         playButtons.map(function(button, idx){
             playButtons[idx].onmousedown = function(){
+                var instrument = 'violin';
                 var id = button.id;
                 var note = id.split('-')[1];
-                var synth = instruments.clarinet(parseInt(note));
-                sendData('clarinet', note);
+                var synth = instruments[instrument](parseInt(note*2));
+                sendData(instrument, note*2);
                 playButtons[idx].onmouseup = function(){
                     synth.noteOffWithFreq(note);
                 }
