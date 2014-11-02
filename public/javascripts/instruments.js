@@ -82,7 +82,7 @@ instruments = {
         var synth = T('SynthDef').play();
 
         synth.def = function(opts) {
-            var osc = T('tri', {freq: opts.freq, mul: 100});
+            var osc = T('tri', {freq: opts.freq, mul: 80});
 
             var env  = T('perc', {a:10, r:400},
                 osc);

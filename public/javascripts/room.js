@@ -14,7 +14,6 @@ var keymap = {
 var keyboardInstrument = 'synth'; //init
 
 //sockets
-var roomId = '#{roomId}';
 var socket = io();
 
 var joinRoom = document.getElementById('join');

@@ -41,6 +41,9 @@ block content
             ul#user-list
 
 block js
+    script.
+        roomId = '#{roomId}';
+
     script(src="/socket.io/socket.io.js")
     script(src="/bower_components/timbre/index.js")
     script(src="/javascripts/instruments.js")
