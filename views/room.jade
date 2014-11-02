@@ -68,3 +68,20 @@ block js
             };
         });
 
+        var keymap = {
+            49: 'C3',
+            50: 'D3',
+            51: 'E3',
+            52: 'F3',
+            53: 'G3',
+            54: 'A4',
+            55: 'B4',
+            56: 'C4'
+        };
+
+        window.onkeyup = function(e) {
+            var key = e.keyCode ? e.keyCode : e.which;
+            sound.playInstrument(keymap[key]);
+            sendData('play');
+        };
+
