@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+var debug = require('debug')('enghack2014');
+var app = require('../app');
+var httpServer = require('../sockets');
+
+app.set('port', process.env.PORT || 3000);
+
+var server = httpServer.listen(app.get('port'), function() {
+  debug('Express server listening on port ' + server.address().port);
+});
