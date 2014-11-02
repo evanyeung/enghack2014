@@ -65,7 +65,7 @@ block js
         }
 
         socket.on('recievedata', function(user, data){
-            sound.playInstrument('C');
+            sound.playInstrument(data);
         });
 
     script.
@@ -79,7 +79,7 @@ block js
                 var id = button.id;
                 var note = id.split('-')[1];
                 sound.playInstrument(note);
-                sendData('play');
+                sendData(note);
             };
         });
 
@@ -96,7 +96,9 @@ block js
 
         window.onkeyup = function(e) {
             var key = e.keyCode ? e.keyCode : e.which;
-            sound.playInstrument(keymap[key]);
-            sendData('play');
+            if(keymap[key]){
+                sound.playInstrument(keymap[key]);
+                sendData(keymap[key]);
+            }
         };
 
