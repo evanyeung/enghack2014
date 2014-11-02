@@ -109,6 +109,7 @@ block js
         }
 
         function sendData(instrument, pitch){
+            pitch = Math.floor(pitch);
             socket.emit('sendnote', instrument, pitch);
             lightUpUser(socket.username);
         }
@@ -145,6 +146,7 @@ block js
             };
         });
 
+        var multiplier = 1;
         var keymap = {
             49: '261',
             50: '293',
@@ -153,13 +155,31 @@ block js
             53: '392',
             54: '440',
             55: '494',
-            56: '523'
+            56: '523',
+            86: Math.pow(2, 1/12)
         };
 
-        document.onkeydown = function(e) {
-            var key = e.keyCode ? e.keyCode : e.which;
+        var map = [];
+        document.onkeydown = document.onkeyup = function(e) {
+            e = e || event; // to deal with IE
+            map[e.keyCode] = e.type == 'keydown';
+
+            // v + number
+            if( map[86] ){
+                multiplier = map[86];
+            }
+
+            // c + number
+            else if( map[67] ){
+                multiplier = 1/map[86];
+            }
+
+            // No tab or space
+            else{
+                multiplier = 1;
+            }
+
             if(keymap[key]){
-                sendData('edm', keymap[key]);
+                sendData('edm', multiplier*keymap[key]);
             }
         };
-
