@@ -1,0 +1,13 @@
+{
+  "name": "timbre",
+  "_cacheHeaders": {
+    "Last-Modified": "Mon, 13 Oct 2014 07:33:06 GMT",
+    "Content-Length": "145180",
+    "Content-Type": "application/javascript; charset=utf-8"
+  },
+  "main": "index.js",
+  "_source": "http://mohayonao.github.io/timbre.js/timbre.js",
+  "_target": "*",
+  "_originalSource": "http://mohayonao.github.io/timbre.js/timbre.js",
+  "_direct": true
+}

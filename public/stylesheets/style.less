@@ -3,7 +3,15 @@ body {
 }
 
 a {
-    color: #00B7FF;
+    color: #000000;
+    text-decoration: none;
+
+    &:hover,
+    &:visited,
+    &:active{
+        color: #00000;
+        text-decoration: none;
+    }
 }
 
 .main-div{
@@ -41,8 +49,7 @@ button{
         cursor: pointer;
     }
 
-    &:active,
-    &:focus{
+    &:active{
         position: relative;
         top: 3px;
         box-shadow: 0 0 #333333;
@@ -66,6 +73,29 @@ button{
 
     .play{
         display: none;
+    }
+
+    .play-note{
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    #user-list{
+        position: fixed;
+        top: 15px;
+        right: 0;
+        padding: 0 50px;
+
+        li{
+            @size: 100px;
+            list-style-type: none;
+            padding: 5px 15px;
+            margin-bottom: 10px;
+            width: @size;
+            text-align: center;
+            border: 1px solid black;
+            border-radius: 3px;
+        }
     }
 }
 
