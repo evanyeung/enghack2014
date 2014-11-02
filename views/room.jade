@@ -1,17 +1,22 @@
 extends layout
 
 block content
-    h1= title
-    p id: #{roomId}
+    div.room
+        h1.title= title
 
-    button#play-C3 play C
-    button#play-D3 play D
-    button#play-E3 play E
-    button#play-F3 play F
-    button#play-G3 play G
-    button#play-A4 play A
-    button#play-B4 play B
-    button#play-C4 play B
+        form.sign-in#sign-in
+            p Enter a username
+            input#username(placeholder="Username")
+            button#join(type="submit") Join
+        div.play#play
+            button#play-C3.play-note play C
+            button#play-D3.play-note play D
+            button#play-E3.play-note play E
+            button#play-F3.play-note play F
+            button#play-G3.play-note play G
+            button#play-A4.play-note play A
+            button#play-B4.play-note play B
+            button#play-C4.play-note play B
 
 block js
     script(src="/socket.io/socket.io.js")
@@ -40,10 +45,20 @@ block js
         var roomId = '#{roomId}'
         var socket = io();
 
-        socket.on('connect', function(){
-            if(roomId)
-                socket.emit('joinroom', prompt('Enter username'), roomId);
-        });
+        var joinRoom = document.getElementById('join');
+        joinRoom.onclick = function(){
+            var username = document.getElementById('username').value;
+            if(roomId && username){
+                socket.emit('joinroom', username, roomId);
+                document.getElementById('sign-in').style.display = 'none';
+                document.getElementById('play').style.display = 'block';
+            }
+            else{
+                alert('Please enter a username');
+            }
+
+            return false;
+        };
 
         function sendData(data){
             socket.emit('senddata', data);
@@ -56,7 +71,7 @@ block js
     script.
         var messages = document.getElementById('messages');
         var message = document.getElementById('message-input');
-        var playButtons = document.getElementsByTagName('button');
+        var playButtons = document.getElementsByClassName('play-note');
         playButtons = Array.prototype.slice.call(playButtons);
 
         playButtons.map(function(button, idx){

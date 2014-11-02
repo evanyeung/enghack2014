@@ -1,6 +1,18 @@
 extends layout
 
 block content
-    h1= title
-    p Welcome to #{title}
-    p Create a room!
+    div.main-div.index
+        h1.title= title
+        p Create or join a room!
+        form
+            input(name="roomId", id="room-id", placeholder="Jam name")
+            button#go-to-room(type="submit") JAM!
+
+block js
+    script.
+        var roomId = document.getElementById('room-id');
+        var goToRoom = document.getElementById('go-to-room');
+        goToRoom.onclick = function(){
+            window.location.href = '/' + roomId.value;
+            return false;
+        };
