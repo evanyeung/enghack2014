@@ -94,7 +94,7 @@ block js
             56: 'C4'
         };
 
-        window.onkeyup = function(e) {
+        document.onkeydown = function(e) {
             var key = e.keyCode ? e.keyCode : e.which;
             if(keymap[key]){
                 sound.playInstrument(keymap[key]);
