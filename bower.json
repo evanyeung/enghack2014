@@ -1,0 +1,19 @@
+{
+  "name": "enghack2014",
+  "version": "0.0.0",
+  "homepage": "https://github.com/evanyeung/enghack2014",
+  "authors": [
+    "Evan Yeung <evan.yeung1@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "Thunder": "https://github.com/joelarson4/Thunder.git"
+  }
+}

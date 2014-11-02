@@ -1,0 +1,14 @@
+{
+  "name": "Thunder",
+  "homepage": "https://github.com/joelarson4/Thunder",
+  "_release": "93c49fd474",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "93c49fd47499fe03433b513021e47151e92032d6"
+  },
+  "_source": "https://github.com/joelarson4/Thunder.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/joelarson4/Thunder.git",
+  "_direct": true
+}

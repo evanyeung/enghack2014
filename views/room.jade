@@ -2,15 +2,28 @@ extends layout
 
 block content
     h1= title
-    p Welcome to #{title}
     p id: #{roomId}
 
-    div#messages
-    input#message-input
-    button#send-message Send
+    button#send-message play
 
 block js
     script(src="/socket.io/socket.io.js")
+    script(src="/bower_components/Thunder/thunder.js")
+    script.
+        Th.init();
+
+        //based on http://joewlarson.com/thunderjs/demo.html
+        var sounds={
+                sineFunc:function(si, len,  frq, chn, opt) {
+                    var fad=Math.min(1,(opt.sustain || 1)*(len-si)/len); // used to fade out, to avoid an abrupt chop off of the wave, which causes a click.
+                    return Math.floor(fad*128*256*(
+                        Math.sin(2.0 * Math.PI * frq * si  / 44100)
+                    ));
+                }
+            };
+
+        Th.Sound.create('testsound', sounds.sineFunc).play();
+
     script.
         var roomId = '#{roomId}'
         var socket = io();
@@ -20,13 +33,12 @@ block js
                 socket.emit('joinroom', prompt('Enter username'), roomId);
         });
 
-        function sendData(message){
-            console.log(message);
-            socket.emit('senddata', message);
+        function sendData(data){
+            socket.emit('senddata', data);
         }
 
         socket.on('recievedata', function(user, data){
-            console.log(user + ':' + data);
+            Th.Sound.create('testsound', sounds.sineFunc).play();
         });
 
     script.
@@ -35,6 +47,6 @@ block js
         var sendMessage = document.getElementById('send-message');
 
         sendMessage.onclick = function(){
-            sendData(message.value);
+            sendData('play');
         };
 
