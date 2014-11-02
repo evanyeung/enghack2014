@@ -10,49 +10,32 @@ block content
             input#username(placeholder="Username")
             button#join(type="submit") Join
         div.play#play
-            div.instrument
-                h4 Synth
-                button#play-edm-261.play-note C
-                button#play-edm-293.play-note D
-                button#play-edm-330.play-note E
-                button#play-edm-350.play-note F
-                button#play-edm-392.play-note G
-                button#play-edm-440.play-note A
-                button#play-edm-493.play-note B
-                button#play-edm-523.play-note C
-            div.instrument
-                h4 Clarinet
-                button#play-clarinet-261.play-note C
-                button#play-clarinet-293.play-note D
-                button#play-clarinet-330.play-note E
-                button#play-clarinet-350.play-note F
-                button#play-clarinet-392.play-note G
-                button#play-clarinet-440.play-note A
-                button#play-clarinet-493.play-note B
-                button#play-clarinet-523.play-note C
-            div.instrument
-                h4 Violin
-                button#play-violin-261.play-note C
-                button#play-violin-293.play-note D
-                button#play-violin-330.play-note E
-                button#play-violin-350.play-note F
-                button#play-violin-392.play-note G
-                button#play-violin-440.play-note A
-                button#play-violin-493.play-note B
-                button#play-violin-523.play-note C
-            div.instrument
-                h4 Chimes
-                button#play-chimes-261.play-note C
-                button#play-chimes-293.play-note D
-                button#play-chimes-330.play-note E
-                button#play-chimes-350.play-note F
-                button#play-chimes-392.play-note G
-                button#play-chimes-440.play-note A
-                button#play-chimes-493.play-note B
-                button#play-chimes-523.play-note C
-            div.instrument
-                h4 Kick
-                button#play-kick-261.play-note Kick
+            div.play-col
+                - var instrument_list = ['synth', 'clarinet', 'violin', 'chimes']
+                - for(var i=0; i<instrument_list.length; i++){
+                    div.instrument
+                        h4= instrument_list[i]
+                        button(id="play-#{instrument_list[i]}-261").play-note C
+                        button(id="play-#{instrument_list[i]}-293").play-note D
+                        button(id="play-#{instrument_list[i]}-330").play-note E
+                        button(id="play-#{instrument_list[i]}-350").play-note F
+                        button(id="play-#{instrument_list[i]}-392").play-note G
+                        button(id="play-#{instrument_list[i]}-440").play-note A
+                        button(id="play-#{instrument_list[i]}-493").play-note B
+                        button(id="play-#{instrument_list[i]}-523").play-note C
+                        button(id="#{instrument_list[i]}").set-keyboard Set to keyboard
+                - }
+                    h4 Kick
+                    button#play-kick-261.play-note Kick
+
+            div.legend
+                h3 Legend
+                ul
+                    li keys = 1-8
+                    li Octave +/- = z/x
+                    li Sharp (#) = v
+                    li Flat (b) = c
+                    li kick = space
 
         div
             ul#user-list
@@ -61,125 +44,4 @@ block js
     script(src="/socket.io/socket.io.js")
     script(src="/bower_components/timbre/index.js")
     script(src="/javascripts/instruments.js")
-    script.
-        var roomId = '#{roomId}'
-        var socket = io();
-
-        var joinRoom = document.getElementById('join');
-        joinRoom.onclick = function(){
-            var username = document.getElementById('username').value;
-            if(roomId && username){
-                socket.emit('joinroom', username, roomId);
-            }
-            else{
-                alert('Please enter a username');
-            }
-
-            return false;
-        };
-
-        socket.on('joinedroom', function(result){
-            if(result){
-                document.getElementById('sign-in').style.display = 'none';
-                document.getElementById('play').style.display = 'block';
-            }
-            else{
-                alert('Sorry, that username is taken');
-            }
-        });
-
-        function resetUserColor(node){
-            setTimeout(function(){
-                node.style.background = '#ffffff';
-                node.style.color = '#000000';
-            }, 200);
-        }
-
-        function lightUpUser(user){
-            //show which user played the note
-            var userList = document.getElementById('user-list');
-            var childNodes = Array.prototype.slice.call(userList.childNodes);
-            for(var i=0; i<childNodes.length; i++){
-                if(childNodes[i].innerHTML === user){
-                    childNodes[i].style.background = '#000000';
-                    childNodes[i].style.color = '#ffffff';
-                    resetUserColor(childNodes[i]);
-                }
-            }
-        }
-
-        function sendData(instrument, pitch){
-            pitch = Math.floor(pitch);
-            socket.emit('sendnote', instrument, pitch);
-            lightUpUser(socket.username);
-        }
-
-        socket.on('recievedata', function(user, instrument, pitch){
-            instruments[instrument](pitch);
-            lightUpUser(user);
-        });
-
-        socket.on('userchange', function(users){
-            var userList = document.getElementById('user-list');
-            while(userList.firstChild){
-                userList.removeChild(userList.firstChild);
-            }
-            for(var i=0; i<users.length; i++){
-                var li = document.createElement("li");
-                li.appendChild(document.createTextNode(users[i]));
-                userList.appendChild(li);
-            }
-        });
-
-    script.
-        var messages = document.getElementById('messages');
-        var message = document.getElementById('message-input');
-        var playButtons = document.getElementsByClassName('play-note');
-        playButtons = Array.prototype.slice.call(playButtons);
-
-        playButtons.map(function(button, idx){
-            playButtons[idx].onmousedown = function(){
-                var id = button.id;
-                var instrument = id.split('-')[1];
-                var note = id.split('-')[2];
-                sendData(instrument, note);
-            };
-        });
-
-        var multiplier = 1;
-        var keymap = {
-            49: '261',
-            50: '293',
-            51: '330',
-            52: '350',
-            53: '392',
-            54: '440',
-            55: '494',
-            56: '523',
-            86: Math.pow(2, 1/12)
-        };
-
-        var map = [];
-        document.onkeydown = document.onkeyup = function(e) {
-            e = e || event; // to deal with IE
-            map[e.keyCode] = e.type == 'keydown';
-
-            // v + number
-            if( map[86] ){
-                multiplier = map[86];
-            }
-
-            // c + number
-            else if( map[67] ){
-                multiplier = 1/map[86];
-            }
-
-            // No tab or space
-            else{
-                multiplier = 1;
-            }
-
-            if(keymap[key]){
-                sendData('edm', multiplier*keymap[key]);
-            }
-        };
+    script(src="/javascripts/room.js")

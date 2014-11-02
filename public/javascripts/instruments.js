@@ -1,5 +1,5 @@
 instruments = {
-    edm: function(pitch){
+    synth: function(pitch){
         var synth = T('SynthDef').play();
 
         synth.def = function(opts) {
@@ -82,7 +82,7 @@ instruments = {
         var synth = T('SynthDef').play();
 
         synth.def = function(opts) {
-            var osc = T('tri', {freq: opts.freq, mul: 40});
+            var osc = T('tri', {freq: opts.freq, mul: 100});
 
             var env  = T('perc', {a:10, r:400},
                 osc);
