@@ -68,3 +68,36 @@ block js
             };
         });
 
+        window.onkeyup = function(e) {
+            var key = e.keyCode ? e.keyCode : e.which;
+
+            if (key == 49) {
+                sound.playInstrument('C3');
+                sendData('play');
+            }
+            else if (key == 50) {
+                sound.playInstrument('D3');
+                sendData('play');
+            }
+            else if (key == 51) {
+                sound.playInstrument('E3');
+                sendData('play');
+            }
+            else if (key == 52) {
+                sound.playInstrument('F3');
+                sendData('play');
+            }
+            else if (key == 53) {
+                sound.playInstrument('G3');
+                sendData('play');
+            }
+            else if (key == 54) {
+                sound.playInstrument('A4');
+                sendData('play');
+            }
+            else if (key == 55) {
+                sound.playInstrument('B4');
+                sendData('play');
+            }
+        };
+
