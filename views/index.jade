@@ -3,29 +3,4 @@ extends layout
 block content
     h1= title
     p Welcome to #{title}
-    p id: #{roomId}
-
-    button#switch-room1 room1
-    button#switch-room2 room2
-    div#messages
-    input#message-input
-    button#send-message Send
-
-block bottomjs
-    script.
-        var room1 = document.getElementById('switch-room1');
-        var room2 = document.getElementById('switch-room2');
-        var messages = document.getElementById('messages');
-        var message = document.getElementById('message-input');
-        var sendMessage = document.getElementById('send-message');
-
-        room1.onclick = function(){
-            switchRoom('room1');
-        };
-        room2.onclick = function(){
-            switchRoom('room2');
-        };
-        sendMessage.onclick = function(){
-            sendData(message.value);
-        };
-
+    p Create a room!

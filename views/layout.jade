@@ -5,26 +5,4 @@ html
         link(rel='stylesheet', href='/stylesheets/style.css')
     body
         block content
-    script(src="/socket.io/socket.io.js")
-    script.
-        var roomId = '#{roomId}'
-        var socket = io();
-
-        socket.on('connect', function(){
-            //socket.emit('adduser', prompt('Enter username'));
-        });
-
-        function sendData(message){
-            console.log(message);
-            socket.emit('senddata', message);
-        }
-
-        function switchRoom(room){
-            socket.emit('switchroom', room);
-        }
-
-        socket.on('updatechat', function(user, data){
-            console.log(user + ':' + data);
-        });
-
-    block bottomjs
+    block js

@@ -1,0 +1,40 @@
+extends layout
+
+block content
+    h1= title
+    p Welcome to #{title}
+    p id: #{roomId}
+
+    div#messages
+    input#message-input
+    button#send-message Send
+
+block js
+    script(src="/socket.io/socket.io.js")
+    script.
+        var roomId = '#{roomId}'
+        var socket = io();
+
+        socket.on('connect', function(){
+            if(roomId)
+                socket.emit('joinroom', prompt('Enter username'), roomId);
+        });
+
+        function sendData(message){
+            console.log(message);
+            socket.emit('senddata', message);
+        }
+
+        socket.on('recievedata', function(user, data){
+            console.log(user + ':' + data);
+        });
+
+    script.
+        var messages = document.getElementById('messages');
+        var message = document.getElementById('message-input');
+        var sendMessage = document.getElementById('send-message');
+
+        sendMessage.onclick = function(){
+            sendData(message.value);
+        };
+

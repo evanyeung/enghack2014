@@ -6,8 +6,7 @@ router.get('/', function(req, res) {
     res.render('index', { title: 'MyApp' });
 });
 router.get('/:id', function(req, res) {
-    console.log(req.param('id'));
-    res.render('index', {title: 'MyApp', roomId: req.param('id')});
+    res.render('room', {title: 'MyApp', roomId: req.param('id')});
 });
 
 module.exports = router;
