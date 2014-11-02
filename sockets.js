@@ -16,11 +16,9 @@ io.on('connection', function(socket){
             users[room] = [];
         }
         if(users[room].indexOf(username) !== -1){
-            console.log('FAILED');
             socket.emit('joinedroom', false);
         }
         else{
-            console.log('FINE');
             socket.username = username;
             users[room].push(username);
 
@@ -29,8 +27,8 @@ io.on('connection', function(socket){
         }
     });
 
-    socket.on('senddata', function(instrument, data){
-        socket.broadcast.to(socket.room).emit('recievedata', instrument, data);
+    socket.on('sendnote', function(instrument, pitch){
+        io.sockets.in(socket.room).emit('recievedata', socket.username, instrument, pitch);
     });
 
     socket.on('disconnect', function(){
@@ -39,7 +37,7 @@ io.on('connection', function(socket){
             var idx = users[socket.room].indexOf(socket.username);
             if(idx != -1)
                 users[socket.room].splice(idx, 1);
-                io.sockets.in(room).emit('userchange', users[room]);
+                io.sockets.in(socket.room).emit('userchange', users[socket.room]);
             if(users[socket.room].length === 0)
                 delete users[socket.room];
         }

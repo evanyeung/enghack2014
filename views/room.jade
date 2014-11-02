@@ -52,12 +52,35 @@ block js
             }
         });
 
-        function sendData(instrument, data){
-            socket.emit('sendata', instrument, data);
+        function resetUserColor(node){
+            setTimeout(function(){
+                console.log('here');
+                node.style.background = '#ffffff';
+                node.style.color = '#000000';
+            }, 200);
         }
 
-        socket.on('recievedata', function(instrument, pitch){
+        function lightUpUser(user){
+            //show which user played the note
+            var userList = document.getElementById('user-list');
+            var childNodes = Array.prototype.slice.call(userList.childNodes);
+            for(var i=0; i<childNodes.length; i++){
+                if(childNodes[i].innerHTML === user){
+                    childNodes[i].style.background = '#000000';
+                    childNodes[i].style.color = '#ffffff';
+                    resetUserColor(childNodes[i]);
+                }
+            }
+        }
+
+        function sendData(instrument, pitch){
+            socket.emit('sendnote', instrument, pitch);
+            lightUpUser(socket.username);
+        }
+
+        socket.on('recievedata', function(user, instrument, pitch){
             instruments[instrument](pitch);
+            lightUpUser(user);
         });
 
         socket.on('userchange', function(users){
@@ -83,11 +106,7 @@ block js
                 var instrument = 'violin';
                 var id = button.id;
                 var note = id.split('-')[1];
-                var synth = instruments[instrument](parseInt(note*2));
                 sendData(instrument, note*2);
-                playButtons[idx].onmouseup = function(){
-                    synth.noteOffWithFreq(note);
-                }
             };
         });
 
@@ -105,7 +124,6 @@ block js
         document.onkeydown = function(e) {
             var key = e.keyCode ? e.keyCode : e.which;
             if(keymap[key]){
-                instruments.edm(keymap[key]);
                 sendData('edm', keymap[key]);
             }
         };
