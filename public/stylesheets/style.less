@@ -1,5 +1,9 @@
-body {
+html, body {
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+
 }
 
 a {
@@ -16,9 +20,12 @@ a {
 
 .main-div{
     width: 100%;
+    min-height: 100%;
     text-align: center;
+    padding-top: 50px;
     .title{
         font-size: 64px;
+        margin-top: 0;
     }
 }
 
@@ -57,12 +64,6 @@ button{
     }
 }
 
-
-
-.index{
-
-}
-
 .room{
     padding-left: 50px;
 
@@ -78,6 +79,10 @@ button{
     .play-note{
         display: inline-block;
         margin-right: 10px;
+    }
+
+    .instrument h4{
+        margin-bottom: 5px;
     }
 
     #user-list{
